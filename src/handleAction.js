@@ -2,6 +2,21 @@ function isFunction(val) {
   return typeof val === 'function';
 }
 
+function inArray(array, val) {
+  return array.indexOf(val) !== -1;
+}
+
+function getHandlerKey(action) {
+  if (action.error === true) return 'throw';
+
+  if (action.sequence && inArray(['start', 'return'], action.sequence.type)) {
+    return action.sequence.type;
+  }
+
+  return 'next';
+}
+
+
 export default function handleAction(type, reducers, defaultState) {
   const typeValue = isFunction(type)
     ? type.toString()
@@ -11,7 +26,7 @@ export default function handleAction(type, reducers, defaultState) {
     // If action type does not match, return previous state
     if (action.type !== typeValue) return state;
 
-    const handlerKey = action.error === true ? 'throw' : 'next';
+    const handlerKey = getHandlerKey(action);
 
     // If function is passed instead of map, use as reducer
     if (isFunction(reducers)) {
