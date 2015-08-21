@@ -7,7 +7,7 @@ function inArray(array, val) {
 }
 
 function getHandlerKey(action) {
-  if (action.error === true) return 'throw';
+  if (action.error === true) return 'error';
 
   if (action.sequence && inArray(['start', 'complete'], action.sequence.type)) {
     return action.sequence.type;
@@ -15,7 +15,6 @@ function getHandlerKey(action) {
 
   return 'next';
 }
-
 
 export default function handleAction(type, reducers, defaultState) {
   const typeValue = isFunction(type)
